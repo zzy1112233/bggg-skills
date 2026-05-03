@@ -1,29 +1,31 @@
 # bggg-creator-image2psd
 
-`bggg-creator-image2psd` is a Codex skill for turning one or more raster images into a layered PSD. It is designed for image-to-PSD workflows such as poster decomposition, product-scene cutouts, AI-generated element assembly, white-background removal, and color-cluster splitting.
+中文 | [English](./README_EN.md)
 
-The bundled PSD writer is pure Python and does not require Photoshop, ImageMagick, Wand, or `psd-tools`.
+`bggg-creator-image2psd` 是一个 Codex skill，用来把一张或多张栅格图片整理成可编辑的分层 PSD。它适合海报拆层、产品场景拆图、AI 生图元素组装、白底转透明、颜色聚类拆层，以及“把图片拆成若干个 Photoshop 可移动图层”的工作流。
 
-## What It Does
+这个 skill 内置纯 Python PSD writer，不依赖 Photoshop、ImageMagick、Wand 或 `psd-tools`。
 
-- Assemble multiple image or raster text layers into one PSD.
-- Preserve layer names and alpha channels.
-- Export a flattened PNG preview.
-- Export full-canvas transparent PNG layers for manual Photoshop stacking.
-- Split a flat image into color-cluster raster layers.
-- Create a per-task `projects/YYYYMMDD_slug/` folder for all intermediate assets.
-- In Codex, pair naturally with the `imagegen` skill for generating, editing, or rebuilding image elements before PSD assembly.
+## 能做什么
 
-## Install
+- 把多张图片或栅格文字层组装成 PSD。
+- 保留图层名和透明通道。
+- 导出合成预览 PNG。
+- 导出全画布透明 PNG 图层，方便 Photoshop 直接按 `(0, 0)` 叠放。
+- 把单张平面图按颜色聚类拆成多个图层。
+- 每次任务自动使用 `projects/YYYYMMDD_slug/` 保存源图、过程图、PSD、预览和诊断文件。
+- 在 Codex 中默认配合 `imagegen` skill：需要生成、编辑、补齐、重建元素时，先产出项目内资产，再组装 PSD。
 
-Copy this folder into your Codex skills directory:
+## 安装
+
+把本目录复制到 Codex skills 目录：
 
 ```bash
 mkdir -p ~/.codex/skills
 cp -R bggg-creator-image2psd ~/.codex/skills/
 ```
 
-Or clone the whole `bggg-skills` repository and copy/symlink the skill:
+也可以克隆整个 `bggg-skills` 仓库后复制或软链接：
 
 ```bash
 git clone https://github.com/binggandata/bggg-skills.git
@@ -31,48 +33,48 @@ mkdir -p ~/.codex/skills
 ln -s "$PWD/bggg-skills/bggg-creator-image2psd" ~/.codex/skills/bggg-creator-image2psd
 ```
 
-Install runtime dependencies:
+安装运行依赖：
 
 ```bash
 python3 -m pip install -r ~/.codex/skills/bggg-creator-image2psd/scripts/requirements.txt
 ```
 
-Required dependencies are `Pillow` and `numpy`. `opencv-python` improves subject masks and light foreground preservation. `scikit-learn` improves `split-colors --method kmeans`.
+必需依赖是 `Pillow` 和 `numpy`。`opencv-python` 用于更好的主体遮罩和浅色主体保护；`scikit-learn` 可增强 `split-colors --method kmeans`。
 
-## Quick Start In Codex
+## 在 Codex 中使用
 
-Ask Codex something like:
-
-```text
-Use bggg-creator-image2psd to turn this image into a PSD.
-Keep element positions unchanged, split the main objects and text into separate layers,
-and put all process images under the skill project's projects folder.
-```
-
-For Codex image generation workflows:
+可以直接这样对 Codex 说：
 
 ```text
-Use imagegen to generate separate background, subject, title, and decoration images,
-then use bggg-creator-image2psd to assemble them into a PSD.
+使用 bggg-creator-image2psd 把这张图转成 PSD。
+保持元素相对位置不变，把主体、文字、背景拆成独立图层，
+所有过程图片都放到 skill 的 projects 文件夹下。
 ```
 
-## Command-Line Usage
+如果需要先生成元素再组装：
 
-Initialize a project folder:
+```text
+先用 imagegen 生成背景、主体、标题和装饰元素，
+再用 bggg-creator-image2psd 把它们组装成 PSD。
+```
+
+## 命令行用法
+
+初始化一个项目目录：
 
 ```bash
 python3 bggg-creator-image2psd/scripts/init_project.py lifestyle_product \
   --source input.png
 ```
 
-Assemble layers from a manifest:
+从 manifest 组装 PSD：
 
 ```bash
 python3 bggg-creator-image2psd/scripts/image2psd.py assemble \
   --manifest bggg-creator-image2psd/projects/20260503_lifestyle_product/manifest.json
 ```
 
-Assemble positional images directly:
+直接组装多张图片，第一张作为背景：
 
 ```bash
 python3 bggg-creator-image2psd/scripts/image2psd.py assemble bg.png logo.png title.png \
@@ -82,7 +84,7 @@ python3 bggg-creator-image2psd/scripts/image2psd.py assemble bg.png logo.png tit
   --save-layers layers
 ```
 
-Split one flat image into color layers:
+把单张平面图按颜色拆层：
 
 ```bash
 python3 bggg-creator-image2psd/scripts/image2psd.py split-colors poster.png \
@@ -92,9 +94,9 @@ python3 bggg-creator-image2psd/scripts/image2psd.py split-colors poster.png \
   --save-layers poster-color-layers
 ```
 
-## Manifest Example
+## Manifest 示例
 
-Layer order is bottom-to-top.
+图层顺序是从底到顶。
 
 ```json
 {
@@ -133,17 +135,17 @@ Layer order is bottom-to-top.
 }
 ```
 
-## Background Removal Modes
+## 去底模式
 
-- `none`: keep the image as-is.
-- `white`: convert white background to alpha.
-- `white-preserve`: white-to-alpha plus a soft structure mask for pale foregrounds.
-- `corner`: sample the four corners as the background color.
-- `color`: use an explicit `color` field in the layer spec.
+- `none`：保持原图。
+- `white`：把白色背景转透明。
+- `white-preserve`：白底转透明，同时保留白色/浅色主体结构。
+- `corner`：采样四角作为背景色。
+- `color`：使用图层配置里的指定背景色。
 
-## Project Output Layout
+## 项目输出结构
 
-Each real task should live under:
+每次真实任务都会放在：
 
 ```text
 bggg-creator-image2psd/projects/YYYYMMDD_slug/
@@ -159,13 +161,13 @@ bggg-creator-image2psd/projects/YYYYMMDD_slug/
 └── process_notes.md
 ```
 
-Generated project outputs are ignored by Git by default. Keep only `.gitkeep` in `projects/`.
+运行产物默认被 Git 忽略。开源仓库只保留 `projects/.gitkeep`。
 
-## Notes
+## 注意事项
 
-- Text layers created by the manifest are raster layers, not editable Photoshop text objects.
-- Semantic decomposition from a single flat image is inherently approximate. For exact editability, generate or provide separate source elements whenever possible.
-- If a user asks to preserve exact relative position, use full-canvas transparent PNG layers so Photoshop can stack every layer at `(0, 0)`.
+- Manifest 创建的文字层是栅格图层，不是 Photoshop 可编辑文字对象。
+- 从单张平面图做语义拆层时，结果一定是近似的；如果要高度可编辑，最好提供或生成独立元素图。
+- 如果用户要求相对位置不变，优先输出全画布透明 PNG 图层，Photoshop 中每层放在 `(0, 0)` 即可对齐。
 
 ## License
 
