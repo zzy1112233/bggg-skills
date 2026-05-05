@@ -11,6 +11,7 @@ Created by [@binggandata](https://github.com/binggandata) · [小红书](https:/
 ## 当前 Skills
 
 - [`bggg-creator-image2psd`](./bggg-creator-image2psd)：把一张或多张图片转成可编辑的分层 PSD，支持 Codex/imagegen 辅助拆图、全画布 PNG 图层导出、颜色拆层、白底转透明，以及纯 Python PSD 写入。
+- [`bggg-creator-image2ppt`](./bggg-creator-image2ppt)：把图片、截图、HTML 或 SVG 设计稿转成可编辑 PPTX，支持 Codex/imagegen 辅助组件重建、文本框还原、原生形状重建，以及 HTML/SVG 解析到 PPTX。
 - [`bggg-skill-taotie`](./bggg-skill-taotie)：Skill 进化器，通过对比、分析和吸收其他 skill 的优势，帮助目标 skill 渐进式升级。
 
 ## 安装
@@ -27,18 +28,21 @@ cd bggg-skills
 ```bash
 mkdir -p ~/.codex/skills
 cp -R bggg-creator-image2psd ~/.codex/skills/
+cp -R bggg-creator-image2ppt ~/.codex/skills/
 ```
 
 开发时也可以用软链接：
 
 ```bash
 ln -s "$PWD/bggg-creator-image2psd" ~/.codex/skills/bggg-creator-image2psd
+ln -s "$PWD/bggg-creator-image2ppt" ~/.codex/skills/bggg-creator-image2ppt
 ```
 
 如果 skill 目录下有 `scripts/requirements.txt`，再安装它的依赖：
 
 ```bash
 python3 -m pip install -r ~/.codex/skills/bggg-creator-image2psd/scripts/requirements.txt
+python3 -m pip install -r ~/.codex/skills/bggg-creator-image2ppt/scripts/requirements.txt
 ```
 
 ## 仓库结构
@@ -49,6 +53,15 @@ bggg-skills/
 ├── README_EN.md
 ├── LICENSE
 ├── bggg-creator-image2psd/
+│   ├── SKILL.md
+│   ├── README.md
+│   ├── README_EN.md
+│   ├── scripts/
+│   ├── references/
+│   ├── assets/
+│   ├── evals/
+│   └── projects/
+├── bggg-creator-image2ppt/
 │   ├── SKILL.md
 │   ├── README.md
 │   ├── README_EN.md

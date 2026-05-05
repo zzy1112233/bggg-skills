@@ -11,6 +11,7 @@ Created by [@binggandata](https://github.com/binggandata) · [小红书](https:/
 ## Skills
 
 - [`bggg-creator-image2psd`](./bggg-creator-image2psd): turn one or more images into layered PSD files, with Codex/imagegen-assisted workflows, full-canvas PNG layer export, color splitting, white-background removal, and a pure-Python PSD writer.
+- [`bggg-creator-image2ppt`](./bggg-creator-image2ppt): turn images, screenshots, HTML, or SVG designs into editable PPTX files, with Codex/imagegen-assisted component reconstruction, editable text boxes, native shape rebuilding, and HTML/SVG parsing.
 - [`bggg-skill-taotie`](./bggg-skill-taotie): a skill evolution engine that compares, analyzes, and absorbs useful patterns from one skill into another.
 
 ## Install
@@ -27,18 +28,21 @@ Copy a skill into Codex:
 ```bash
 mkdir -p ~/.codex/skills
 cp -R bggg-creator-image2psd ~/.codex/skills/
+cp -R bggg-creator-image2ppt ~/.codex/skills/
 ```
 
 Or symlink it while developing:
 
 ```bash
 ln -s "$PWD/bggg-creator-image2psd" ~/.codex/skills/bggg-creator-image2psd
+ln -s "$PWD/bggg-creator-image2ppt" ~/.codex/skills/bggg-creator-image2ppt
 ```
 
 If the skill has `scripts/requirements.txt`, install its dependencies:
 
 ```bash
 python3 -m pip install -r ~/.codex/skills/bggg-creator-image2psd/scripts/requirements.txt
+python3 -m pip install -r ~/.codex/skills/bggg-creator-image2ppt/scripts/requirements.txt
 ```
 
 ## Repository Layout
@@ -49,6 +53,15 @@ bggg-skills/
 ├── README_EN.md
 ├── LICENSE
 ├── bggg-creator-image2psd/
+│   ├── SKILL.md
+│   ├── README.md
+│   ├── README_EN.md
+│   ├── scripts/
+│   ├── references/
+│   ├── assets/
+│   ├── evals/
+│   └── projects/
+├── bggg-creator-image2ppt/
 │   ├── SKILL.md
 │   ├── README.md
 │   ├── README_EN.md
